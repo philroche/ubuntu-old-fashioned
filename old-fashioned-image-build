@@ -193,6 +193,11 @@ EOF
     lxc file push $SQUID_TMP_CONFIG lp-$SERIES-${ARCH}/etc/apt/apt.conf.d/30squid-proxy
 fi
 
+lxc exec lp-$SERIES-${ARCH} -- rm -rf /etc/resolv.conf
+lxc file push /etc/resolv.conf lp-$SERIES-${ARCH}/etc/resolv.conf
+lxc exec lp-$SERIES-${ARCH} -- cat /etc/resolv.conf
+lxc exec lp-$SERIES-${ARCH} -- service systemd-resolved restart
+
 # Use the same apt mirror as the host
 export MIRROR=$(egrep "(archive|ports)" /etc/apt/sources.list|head -1 | \
                cut -d' ' -f2 | cut -d'/' -f3)
